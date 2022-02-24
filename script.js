@@ -1,54 +1,74 @@
-computerPlay = () => {
+"use strict";
+function computerPlay() {
   let items = ["Rock", "Paper", "Scissors"];
   var item = items[Math.floor(Math.random() * items.length)];
   return item;
-};
-
-startGame = (playerSelection, computerSelection) => {
-  if (playerSelection.toLowerCase() == "rock") {
-    switch (computerSelection.toLowerCase()) {
-      case "rock":
-        return `Both of you chose ${computerSelection}`;
-      case "paper":
-        return `You lost! ${computerSelection} beats ${playerSelection}`;
-      case "scissors":
-        return `You win! ${playerSelection} beats ${computerSelection}`;
-    }
-  } else if (playerSelection.toLowerCase() == "paper") {
-    switch (computerSelection.toLowerCase()) {
-      case "rock":
-        return `You win! ${playerSelection} beats ${computerSelection}`;
-      case "paper":
-        return `Both of you chose ${computerSelection}`;
-      case "scissors":
-        return `You lost! ${computerSelection} beats ${playerSelection}`;
-    }
-  } else {
-    switch (computerSelection.toLowerCase()) {
-      case "rock":
-        return `You lost! ${computerSelection} beats ${playerSelection}`;
-      case "paper":
-        return `You win! ${playerSelection} beats ${computerSelection}`;
-      case "scissors":
-        return `Both of you chose ${computerSelection}`;
-    }
-  }
-};
+}
 
 let wins = 0;
 let losses = 0;
 
-game = () => {
-  for (let i = 0; i < 5; i++) {
-    let choice = prompt("Rock, Paper, Scissors?");
-    let comp = computerPlay();
-    console.log(startGame(choice, comp));
-    if (startGame(choice, comp).includes("win")) wins += 1;
-    else if (startGame(choice, comp).includes("lost")) losses += 1;
+function startGame(playerSelection, computerSelection) {
+  if (playerSelection == "Rock") {
+    switch (computerSelection) {
+      case "Rock":
+        return `Both of you chose ${computerSelection}`;
+      case "Paper":
+        losses += 1;
+        return `You lost! ${computerSelection} beats ${playerSelection}`;
+      case "Scissors":
+        wins += 1;
+        return `You win! ${playerSelection} beats ${computerSelection}`;
+    }
+  } else if (playerSelection == "Paper") {
+    switch (computerSelection) {
+      case "Rock":
+        wins += 1;
+        return `You win! ${playerSelection} beats ${computerSelection}`;
+      case "Paper":
+        return `Both of you chose ${computerSelection}`;
+      case "Scissors":
+        losses += 1;
+        return `You lost! ${computerSelection} beats ${playerSelection}`;
+    }
+  } else {
+    switch (computerSelection) {
+      case "Rock":
+        losses += 1;
+        return `You lost! ${computerSelection} beats ${playerSelection}`;
+      case "Paper":
+        wins += 1;
+        return `You win! ${playerSelection} beats ${computerSelection}`;
+      case "Scissors":
+        return `Both of you chose ${computerSelection}`;
+    }
   }
-};
+}
 
-game();
-let result = "Tied";
-result = wins > losses ? "You win more rounds!" : "You lost more rounds";
-console.log(result);
+const rockBtn = document.querySelector("#rock");
+const paperBtn = document.querySelector("#paper");
+const scissorsBtn = document.querySelector("#scissors");
+
+rockBtn.addEventListener("click", game);
+paperBtn.addEventListener("click", game);
+scissorsBtn.addEventListener("click", game);
+
+let clicks = 0;
+
+function game(e) {
+  if (clicks < 5) {
+    let choice = e.target.innerText;
+    let container = document.querySelector("#container");
+    let div = document.createElement("div");
+    startGame(choice, computerPlay());
+    div.innerText = `Wins: ${wins}, Loss: ${losses}`;
+    container.appendChild(div);
+    clicks++;
+  } else {
+    let result = "Tie";
+    result = wins > losses ? "You win" : "You lose";
+    let h1 = document.createElement("h1");
+    h1.innerText = result;
+    container.appendChild(h1);
+  }
+}
